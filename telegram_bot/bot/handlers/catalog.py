@@ -47,7 +47,7 @@ async def on_category_callback(callback: CallbackQuery, callback_data: Subcatego
     async for x in SubcategoryGoods.objects.filter(subcategory__id=callback_data.subcategory_id):
         goods = await sync_to_async(lambda: x.goods)()
         await callback.message.answer_photo(
-            photo=FSInputFile(path=f'../{goods.image.name}'),
+            photo=FSInputFile(goods.image.name),
             caption=get_goods_caption(goods=goods),
             reply_markup=get_goods_keyboard(goods.id)
         )
