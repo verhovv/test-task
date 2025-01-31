@@ -1,0 +1,34 @@
+services:
+  tdj:
+    build: .
+    command: sh -c "python telegram_bot/main.py & python dj/manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+      - "80:80"
+    networks:
+      - db_network
+    depends_on:
+      - db
+    volumes:
+      - .logs:/logs
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - db_network
+networks:
+  db_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  logs:
+    driver: local
